@@ -1,0 +1,6 @@
+opencv-python
+opencv-contrib-python
+git+https://github.com/sajjjadayobi/FaceLib.git
+mediapipe
+scikit-image
+sklearn
