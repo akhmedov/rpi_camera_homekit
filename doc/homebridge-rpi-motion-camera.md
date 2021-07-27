@@ -120,11 +120,33 @@ ffmpeg -i tcp://127.0.0.1:8000/
 ```
 
 ```
-sudo cp src/rpi-streamer.service /lib/systemd/system/
-sudo chmod 644 /lib/systemd/system/rpi-streamer.service
+sudo cp src/*.service /lib/systemd/system/
+sudo chmod 644 /lib/systemd/system/*.service
 sudo systemctl daemon-reload
+sudo systemctl enable rpi-streamer
+sudo systemctl enable cv-motion
+```
+
+/etc/rc.local
+
+```
+nohup python3 /home/rolan/rpi_camera_homekit/src/rpi_streamer.py &
+nohup python3 /home/rolan/rpi_camera_homekit/src/cv_surveillance_sensor.py &
+```
+
+```
+ps aux | grep python
+kill -9 CV_PROC_ID
+kill -9 STREAM_PROC_ID
 ```
 
 ## Step 4: Custom computer vision pipeline as a Motion sensor
 
+
+
+## Step 5: After the end
+
+```
+vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'
+```
 
