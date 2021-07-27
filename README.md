@@ -24,6 +24,7 @@ nohup raspivid -n -t 0 -w 1440 -h 1080 -fps 30 -ih -fl -l -o - | nc -klvp 8081
 Use «-ro 180» option for «raspivid» if wide is upside down
 Recive commands on Ubuntu:
 nc 192.168.31.122 8081 | mplayer -fps 200 -demuxer h264es -
+ffmpeg -i tcp://127.0.0.1
 Or video capture with OpenCV
 cap = cv2.VideoCapture("tcp://192.168.31.122:8081")
 

@@ -62,7 +62,7 @@ def person_bounding_box(pose, image_shape, hight_bias=0.05):
 
 DISTANCE_QUEUE_LEN = 10
 
-SOURCE_VIDEO_STREAM = 'tcp://192.168.31.106:8081'
+SOURCE_VIDEO_STREAM = 'tcp://192.168.31.121:8000'  # 'tcp://192.168.31.106:8081'
 DISPLAY_RES_SCALE = 1
 PROC_RES_SCALE = 1
 CAM_PARAM = camera_parapeters()

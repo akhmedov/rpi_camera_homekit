@@ -1,19 +1,20 @@
-# Level 1: Guide to create Apple HomeKit Camera from Raspberry Pi computer
+# Apple HomeKit Camera from Raspberry Pi with Computer Vision as Motion Sensor
 
 Following the instruction you will get Apple Homekit compatible camera with 
 some Shortcuts that saves image to local/cloud storage on motion action. 
 The main thing here that we are able to define the motion by our own 
 Computer Vision algorithm. For example, it can trigger only for cats or humans.
 
-Required hardware: Apple HomeKit Hub (TV of HomePod), 
-SMI Camera (such as Raspberry Pi Camera V2) Raspberry Pi V2 (or higher), 
-MicroSD card, Apple Homekit Client (on your iOS or MacOS device)  
+Required hardware: SMI Camera (such as Raspberry Pi Camera V2), 
+Raspberry Pi V2 (or higher), MicroSD card, 
+Apple Homekit Client (on your iOS or MacOS device),
+optional Apple HomeKit Hub (TV of HomePod).
 
 This guide implies you are already flashed Raspbian OS, wired your 
 SMI camera and established SSH connection throw LAN. Also, it is required
 that you have created home instance in your HomeKit App.
 
-## Step 1: Install Homebridge
+## Step 1: Install and configure Homebridge
 
 The right way is to follow the 
 [Official Installation Guide](https://github.com/homebridge/homebridge/wiki/Install-Homebridge-on-Raspbian).
@@ -41,7 +42,7 @@ main Homebridge config
                 "source": "-re -f video4linux2 -i /dev/video0",
                 "stillImageSource": "-re -f video4linux2 -ss 0.9 -i /dev/video0 -vframes 1",
                 "audio": false,
-                "maxStreams": 2,
+                "maxStreams": 1,
                 "maxWidth": 1440,
                 "maxHeight": 1080,
                 "maxFPS": 30,
@@ -80,14 +81,14 @@ from Apple HomeKit App.
 The main idea of ane Smart thing is an automation. Let us provide an automation 
 for the "motion action". There is a powerful tool for this - Shortcats. In the
 latest versions of iOS and MacOS we are able to create shortcuts that are running 
-on personal device or for the HomeKit Hub. Here we can make native HomeKit 
+on a personal device or for the HomeKit Hub. Here we can make native HomeKit 
 actions and execute SSH commandas on come mashine remotly. The last point 
 is a point of interest.
 
 Note: the command field of the SSH execution configuration must be filled with 
 absolut path and the content of the screapt must use absolut pathes too.
 
-The [following script]() 
+The [following script]()
 will take a short video from the camera and save it lockaly. As the 
 result we can get cut functionality of Apple Security Video API. The
 execution must look like this:
@@ -99,3 +100,31 @@ python3 ~/security_record.py
 This approach has two disadvantages: recording can not be asyncony and 
 recording can not in parallel with video monitoring. Solving of this
 will be proposed in next guide.
+
+
+## Step 3: Multiuser streaming service at backend
+
+```
+nohup raspivid -n -t 0 -w 1440 -h 1080 -fps 30 -ih -fl -l -o - | nc -klvp 8000
+```
+
+```
+nc 192.168.31.122 8000 | mplayer -fps 200 -demuxer h264es -
+ffmpeg -i tcp://127.0.0.1:8000/
+```
+
+```
+"source": "-i tcp://127.0.0.1:8000",
+"stillImageSource": "-i tcp://127.0.0.1:8000",
+"maxStreams": 2,
+```
+
+```
+sudo cp src/rpi-streamer.service /lib/systemd/system/
+sudo chmod 644 /lib/systemd/system/rpi-streamer.service
+sudo systemctl daemon-reload
+```
+
+## Step 4: Custom computer vision pipeline as a Motion sensor
+
+
