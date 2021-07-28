@@ -23,7 +23,7 @@ class MotionDetectorBS:
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
         front_ground = self._back_sub.apply(gray)
         # front_ground = cv2.threshold(front_ground, intensity_threshold, 255, cv2.THRESH_BINARY)[1]
-        contours, _ = cv2.findContours(front_ground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(front_ground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
         rects = [cv2.boundingRect(c) for c in contours if cv2.contourArea(c) > self._area_threshold]
         return rects, None, None
 

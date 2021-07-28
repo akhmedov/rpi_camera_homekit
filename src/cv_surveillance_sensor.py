@@ -23,7 +23,7 @@ def draw_detections(image, bounding_boxes, color=(0, 255, 0)):
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--ip', required=True, help='Streaming IP address')
 parser.add_argument('--store', required=False, help='Path for images storage directory')
-parser.add_argument('--display', choices=['True', 'False'], required=True, help='Showing stream with detections')
+# parser.add_argument('--display', choices=['True', 'False'], required=True, help='Showing stream with detections')
 args = parser.parse_args()
 
 cap = VideoCaptureAsync(f'tcp://{args.ip}:8000/')
@@ -35,12 +35,12 @@ while cap.isOpened():
     # frame = cv2.transpose(cv2.transpose(cv2.transpose(frame)))
     rect, _, _ = detector.call(frame)
 
-    if args.display == 'True':
-        frame = draw_detections(frame, rect)
-        frame = cv2.resize(frame, (1440, 1080))
-        cv2.imshow('Stream', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    # if args.display == 'True':
+    #     frame = draw_detections(frame, rect)
+    #     frame = cv2.resize(frame, (1440, 1080))
+    #     cv2.imshow('Stream', frame)
+    # if cv2.waitKey(1) & 0xFF == ord('q'):
+    #     break
 
     if rect and args.store:
         response = requests.get(f'http://{args.ip}:8080/motion/motion?RPi%20Camera')
