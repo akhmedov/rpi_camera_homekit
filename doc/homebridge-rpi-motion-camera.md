@@ -130,8 +130,10 @@ sudo systemctl enable cv-motion
 /etc/rc.local
 
 ```
+mkdir -p /media/usb
+mount -t vfat -o uid=rolan,gid=rolan /dev/sda1 /media/usb
 nohup python3 /home/rolan/rpi_camera_homekit/src/rpi_streamer.py &
-nohup python3 /home/rolan/rpi_camera_homekit/src/cv_surveillance_sensor.py &
+nohup python3 /home/rolan/rpi_camera_homekit/src/cv_surveillance_sensor.py --ip 127.0.0.1 --display False --store /media/usb/ &
 ```
 
 ```
